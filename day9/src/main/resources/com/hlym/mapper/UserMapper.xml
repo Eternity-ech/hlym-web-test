@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hlym.mapper.UserMapper">
+
+    <delete id = "deleteEmp">
+        delete from emp where id in
+        <foreach collection="list" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete >
+
+    <insert id="insterEmp">
+        insert into emp (username, password, name, gender, image, job, entrydate, dept_id, create_time, update_time)
+        values (#{username},#{password},#{name},#{gender},#{image},#{job},#{entrydate},#{deptId},#{createTime},#{updateTime})
+    </insert>
+
+    <update id="updateEmp">
+        update emp set username = #{username}, name = #{name} where id = #{id}
+    </update>
+
+    <select id = "selectEmp" resultType="com.hlym.pojo.Emp">
+    select * from emp where id = #{id}
+    </select>
+
+    <select id="selectEmp2" resultType="com.hlym.pojo.Emp">
+        select * from emp
+        <where>
+            <if test = "name != null">
+                name like concat('%',#{name},'%')
+            </if>
+            <if test = "gender != null">
+                and gender = #{gender}
+            </if>
+            <if test="job != null">
+                and job = #{job}
+            </if>
+            <if test="deptId != null">
+                and dept_id = #{deptId}
+            </if>
+            <if test="begin != null and end != null">
+                and entrydate between #{begin} and #{end}
+            </if>
+        </where>
+  </select>
+
+</mapper>
